@@ -2,7 +2,7 @@ version: '3.7'
 services:
   app:
     build: .
-    image: sioserver
+    image: revalle88/sioserver:latest
     container_name: sioserver_app
     ports:
       - 6558:8080
