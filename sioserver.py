@@ -16,8 +16,13 @@ async def index(request):
     """Serve the client-side application."""
     with open('index.html') as f:
         return web.Response(text=f.read(), content_type='text/html')
-
+# 1. client and server connects.
+# 2. on connect server responses a massage and client triggers user_online event
+# 3. user_online event saves user to redis and response a message
+# 4. on submit button my_event event is binded
+# 5. disconnect same as connect
 # pairs of event-listeners
+
 # emit returns response to client 'my_response' listener
 @sio.event
 async def user_online(sid, message):
