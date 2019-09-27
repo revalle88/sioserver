@@ -17,14 +17,15 @@ async def index(request):
     with open('index.html') as f:
         return web.Response(text=f.read(), content_type='text/html')
 
-
+# pairs of event-listeners
+# emit returns response to client 'my_response' listener
 @sio.event
 async def user_online(sid, message):
     client.set(sid, message['data'])
     print('online status saved to redis: ' + sid)
     await sio.emit('my_response', {'data': 'user saved into redis'}, room=sid)
 
-
+# on connect both server and client events are fired.
 @sio.event
 async def connect(sid, environ):
     print('user connected: ' + sid)
@@ -47,4 +48,4 @@ app.router.add_static('/static', 'static')
 app.router.add_get('/', index)
 
 if __name__ == '__main__':
-    web.run_app(app)
+    web.run_app(app, host='0.0.0.0', port=8080)
