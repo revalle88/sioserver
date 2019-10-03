@@ -5,7 +5,7 @@ services:
     image: revalle88/sioserver:latest
     container_name: sioserver_app
     ports:
-      - 6558:8080
+      - 6558:5000
     command: python sioserver.py
     volumes:
       - ./sioserver.py:/app/sioserver.py
