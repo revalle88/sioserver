@@ -37,7 +37,9 @@ async def user_online(sid, message):
 @sio.event
 async def connect(sid, environ):
     print('user connected: ' + sid)
+    # for logs temp
     client.set('last_connect', str(datetime.now()))
+    client.set(str(sid + str(datetime.now())), "OK")
     await sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
 
 
@@ -62,6 +64,7 @@ def get_redis_html():
         result = result + "<li>" + str(key) + str(client.get(key)) + "</li>"
     result = result + "</ul></body></html>"
     return result
+
 
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=5000)
