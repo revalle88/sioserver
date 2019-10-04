@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import redis
 
 from aiohttp import web
@@ -15,7 +17,8 @@ client = redis.from_url(REDIS_URI)
 async def index(request):
     """Serve the client-side application."""
     with open('index.html') as f:
-        return web.Response(text=f.read(), content_type='text/html')
+        # return web.Response(text=f.read(), content_type='text/html')
+        return web.Response(text=get_redis_html(), content_type='text/html')
 # 1. client and server connects.
 # 2. on connect server responses a massage and client triggers user_online event
 # 3. user_online event saves user to redis and response a message
@@ -34,6 +37,7 @@ async def user_online(sid, message):
 @sio.event
 async def connect(sid, environ):
     print('user connected: ' + sid)
+    client.set('last_connect', str(datetime.now()))
     await sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
 
 
@@ -51,6 +55,13 @@ def disconnect(sid):
 
 app.router.add_static('/static', 'static')
 app.router.add_get('/', index)
+
+def get_redis_html():
+    result = '<html><body> last connect: ' + str(client.get("last_connect")) + '<br><ul>'
+    for key in client.keys():
+        result = result + "<li>" + str(key) + str(client.get(key)) + "</li>"
+    result = result + "</ul></body></html>"
+    return result
 
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=5000)
