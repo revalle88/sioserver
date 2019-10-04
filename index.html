@@ -6,8 +6,8 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.slim.js"></script>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
-            var socket = io.connect("http://94.242.58.10");
-            socket.io.opts.transports = ['polling', 'websocket'];
+            var socket = io.connect("http://94.242.58.10:80");
+            socket.io.opts.transports = ['websocket'];
             socket.on('connect', function() {
                 socket.emit('user_online', {data: 'USER_ID-iddqd'});
             });
